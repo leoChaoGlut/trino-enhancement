@@ -1,7 +1,7 @@
 package personal.leo.trinoShardingSync.service;
 
 import lombok.extern.slf4j.Slf4j;
-import personal.leo.trinoShardingSync.prop.TrinoProps;
+import personal.leo.trinoShardingSync.prop.TrinoProp;
 import personal.leo.trinoShardingSync.utils.TrinoSqlExecutor;
 
 import java.util.List;
@@ -15,11 +15,11 @@ public class TrinoSystemJdbcService {
     private final String table;
     private final TrinoSqlExecutor trinoSqlExecutor;
 
-    public TrinoSystemJdbcService(TrinoProps trinoProps, String catalog, String schema, String table) {
+    public TrinoSystemJdbcService(TrinoProp trinoProp, String catalog, String schema, String table) {
         this.catalog = catalog;
         this.schema = schema;
         this.table = table;
-        this.trinoSqlExecutor = new TrinoSqlExecutor(trinoProps);
+        this.trinoSqlExecutor = new TrinoSqlExecutor(trinoProp);
     }
 
     public String buildSyncColumns() {

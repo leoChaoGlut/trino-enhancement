@@ -37,7 +37,7 @@ public class TrinoShardingSyncService {
     }
 
     public void sync() {
-        @Cleanup final TrinoSqlExecutor trinoSqlExecutor = new TrinoSqlExecutor(trinoShardingSyncProp.getTrinoProps());
+        @Cleanup final TrinoSqlExecutor trinoSqlExecutor = new TrinoSqlExecutor(trinoShardingSyncProp.getTrinoProp());
 
         final String alias = "fullyQualifiedName";
         final String findMatchedTable = String.format("" +

@@ -2,21 +2,21 @@ package personal.leo.trinoShardingSync.service;
 
 import org.junit.Before;
 import org.junit.Test;
-import personal.leo.trinoShardingSync.prop.TrinoProps;
+import personal.leo.trinoShardingSync.prop.TrinoProp;
 
 public class TrinoSystemJdbcServiceTest {
     TrinoSystemJdbcService trinoSystemJdbcService;
 
     @Before
     public void before() {
-        final TrinoProps trinoProps = new TrinoProps()
+        final TrinoProp trinoProp = new TrinoProp()
                 .setUrl("jdbc:trino://localhost:10100");
 
         final String catalog = "hive";
         final String schema = "s1";
         final String table = "t1";
 
-        trinoSystemJdbcService = new TrinoSystemJdbcService(trinoProps, catalog, schema, table);
+        trinoSystemJdbcService = new TrinoSystemJdbcService(trinoProp, catalog, schema, table);
     }
 
     @Test

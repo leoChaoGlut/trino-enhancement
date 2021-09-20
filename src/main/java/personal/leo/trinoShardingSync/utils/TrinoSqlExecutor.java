@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import personal.leo.trinoShardingSync.prop.TrinoProps;
+import personal.leo.trinoShardingSync.prop.TrinoProp;
 
 import java.io.Closeable;
 import java.sql.*;
@@ -16,14 +16,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TrinoSqlExecutor implements Closeable {
     @Getter
-    private final TrinoProps trinoProps;
+    private final TrinoProp trinoProp;
 
     private Connection connection;
 
     public Connection createConnection() throws SQLException {
         final Properties properties = new Properties();
-        properties.setProperty("user", trinoProps.getUser());
-        return DriverManager.getConnection(trinoProps.getUrl(), properties);
+        properties.setProperty("user", trinoProp.getUser());
+        return DriverManager.getConnection(trinoProp.getUrl(), properties);
     }
 
     public void execute(String catalog, String schema, Consumer<Statement> function) {

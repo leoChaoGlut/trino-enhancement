@@ -2,7 +2,7 @@ package personal.leo.trinoShardingSync.utils;
 
 import org.junit.Before;
 import org.junit.Test;
-import personal.leo.trinoShardingSync.prop.TrinoProps;
+import personal.leo.trinoShardingSync.prop.TrinoProp;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -16,10 +16,10 @@ public class TrinoSqlExecutorTest {
 
     @Before
     public void before() {
-        final TrinoProps trinoProps = new TrinoProps()
+        final TrinoProp trinoProp = new TrinoProp()
                 .setUrl("jdbc:trino://localhost:10100");
 
-        trinoSqlExecutor = new TrinoSqlExecutor(trinoProps);
+        trinoSqlExecutor = new TrinoSqlExecutor(trinoProp);
     }
 
     @Test

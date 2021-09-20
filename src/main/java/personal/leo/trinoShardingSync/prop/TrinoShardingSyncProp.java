@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 public class TrinoShardingSyncProp {
     @NonNull
-    private TrinoProps trinoProps;
+    private TrinoProp trinoProp;
 
     /**
      * e.g: ^(mysql[0-9]+).(test[0-9]+).(t[0-9]+)$
