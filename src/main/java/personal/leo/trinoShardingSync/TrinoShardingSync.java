@@ -1,7 +1,8 @@
 package personal.leo.trinoShardingSync;
 
 import com.alibaba.fastjson.JSON;
-import lombok.AllArgsConstructor;
+import lombok.Cleanup;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -11,16 +12,28 @@ import personal.leo.trinoShardingSync.utils.TrinoSqlExecutor;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
 @Slf4j
-@AllArgsConstructor
 public class TrinoShardingSync {
-
-    private final TrinoSqlExecutor trinoSqlExecutor;
+    @NonNull
     private final TrinoShardingSyncProp trinoShardingSyncProp;
+    private final Executor executor;
+
+    public TrinoShardingSync(TrinoShardingSyncProp trinoShardingSyncProp) {
+        this(trinoShardingSyncProp, null);
+    }
+
+    public TrinoShardingSync(TrinoShardingSyncProp trinoShardingSyncProp, Executor executor) {
+        this.trinoShardingSyncProp = trinoShardingSyncProp;
+        this.executor = executor;
+    }
 
     public void sync() {
+        @Cleanup final TrinoSqlExecutor trinoSqlExecutor = new TrinoSqlExecutor(trinoShardingSyncProp.getTrinoProps());
+
         final String alias = "fullyQualifiedName";
         final String findMatchedTable = String.format("" +
                         "select table_cat || '.' || table_schem || '.' || table_name as " + alias + "\n" +
@@ -48,12 +61,31 @@ public class TrinoShardingSync {
                 "from %s\n" +
                 whereClause;
 
-        for (Map<String, Object> matchedFullyQualifedName : matchedFullyQualifedNames) {
-            final String srcFullyQualifiedName = (String) matchedFullyQualifedName.get(alias);
-            final String srcFullyQualifiedNameWithDoubleQuote = trinoSqlExecutor.fullyQualifiedNameWithDoubleQuote(srcFullyQualifiedName);
-            final String insertIntoSelectSql = String.format(insertIntoSelectSqlTmpl, srcFullyQualifiedNameWithDoubleQuote);
-            final int count = trinoSqlExecutor.executeUpdate(insertIntoSelectSql);
-            log.info("After execute sql: " + count);
+        final List<CompletableFuture<Void>> futures = matchedFullyQualifedNames.stream()
+                .map(matchedFullyQualifedName -> {
+                    final String srcFullyQualifiedName = (String) matchedFullyQualifedName.get(alias);
+                    final String srcFullyQualifiedNameWithDoubleQuote = trinoSqlExecutor.fullyQualifiedNameWithDoubleQuote(srcFullyQualifiedName);
+                    final String insertIntoSelectSql = String.format(insertIntoSelectSqlTmpl, srcFullyQualifiedNameWithDoubleQuote);
+
+                    final Runnable runnable = () -> {
+                        final int count = trinoSqlExecutor.executeUpdate(insertIntoSelectSql);
+                        log.info("Insert is finished: " + count);
+                    };
+
+                    if (executor == null) {
+                        return CompletableFuture.runAsync(runnable);
+                    } else {
+                        return CompletableFuture.runAsync(runnable, executor);
+                    }
+                })
+                .collect(Collectors.toList());
+
+        for (CompletableFuture<Void> future : futures) {
+            try {
+                future.get();
+            } catch (Exception e) {
+                throw new RuntimeException("future.get() error: " + e);
+            }
         }
     }
 
