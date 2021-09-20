@@ -1,4 +1,4 @@
-package personal.leo.trinoShardingSync;
+package personal.leo.trinoShardingSync.service;
 
 import com.alibaba.fastjson.JSON;
 import lombok.Cleanup;
@@ -18,24 +18,23 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 @Slf4j
-public class TrinoShardingSync {
+public class TrinoShardingSyncService {
     @NonNull
     private final TrinoShardingSyncProp trinoShardingSyncProp;
     private final Executor executor;
 
-    public TrinoShardingSync(TrinoShardingSyncProp trinoShardingSyncProp, int concurrency) {
+    public TrinoShardingSyncService(TrinoShardingSyncProp trinoShardingSyncProp, int concurrency) {
         this(trinoShardingSyncProp, concurrency, null);
     }
 
-    public TrinoShardingSync(TrinoShardingSyncProp trinoShardingSyncProp, Executor executor) {
+    public TrinoShardingSyncService(TrinoShardingSyncProp trinoShardingSyncProp, Executor executor) {
         this(trinoShardingSyncProp, 1, executor);
     }
 
-    private TrinoShardingSync(TrinoShardingSyncProp trinoShardingSyncProp, int concurrency, Executor executor) {
+    private TrinoShardingSyncService(TrinoShardingSyncProp trinoShardingSyncProp, int concurrency, Executor executor) {
         this.trinoShardingSyncProp = trinoShardingSyncProp;
         this.executor = executor == null ? Executors.newFixedThreadPool(concurrency) : executor;
     }
-
 
     public void sync() {
         @Cleanup final TrinoSqlExecutor trinoSqlExecutor = new TrinoSqlExecutor(trinoShardingSyncProp.getTrinoProps());
@@ -90,5 +89,6 @@ public class TrinoShardingSync {
             }
         }
     }
+
 
 }

@@ -1,4 +1,4 @@
-package personal.leo.trinoShardingSync;
+package personal.leo.trinoShardingSync.service;
 
 
 import org.junit.Before;
@@ -6,8 +6,8 @@ import org.junit.Test;
 import personal.leo.trinoShardingSync.prop.TrinoProps;
 import personal.leo.trinoShardingSync.prop.TrinoShardingSyncProp;
 
-public class TrinoShardingSyncTest {
-    TrinoShardingSync trinoShardingSync;
+public class TrinoShardingSyncServiceTest {
+    TrinoShardingSyncService trinoShardingSyncService;
 
     @Before
     public void before() {
@@ -21,11 +21,11 @@ public class TrinoShardingSyncTest {
 
         final TrinoShardingSyncProp trinoShardingSyncProp = new TrinoShardingSyncProp(trinoProps, srcFullyQualifiedNameRegex, sinkFullyQualifiedName, whereClause, syncColumns);
 
-        trinoShardingSync = new TrinoShardingSync(trinoShardingSyncProp, 1);
+        trinoShardingSyncService = new TrinoShardingSyncService(trinoShardingSyncProp, 1);
     }
 
     @Test
     public void sync() {
-        trinoShardingSync.sync();
+        trinoShardingSyncService.sync();
     }
 }

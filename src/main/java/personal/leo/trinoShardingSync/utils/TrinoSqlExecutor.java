@@ -50,7 +50,7 @@ public class TrinoSqlExecutor implements Closeable {
 
 
     public List<Map<String, Object>> executeQuery(String sql) {
-        log.info("executeQuery: " + sql);
+        log.info("executeQuery: \n" + sql);
         final Connection connection = createOrReuseConnection();
         try (
                 final Statement statement = connection.createStatement();
@@ -63,7 +63,7 @@ public class TrinoSqlExecutor implements Closeable {
     }
 
     public boolean execute(String sql) {
-        log.info("execute: " + sql);
+        log.info("execute: \n" + sql);
         final Connection connection = createOrReuseConnection();
         try (
                 final Statement statement = connection.createStatement();
@@ -76,7 +76,7 @@ public class TrinoSqlExecutor implements Closeable {
 
 
     public int executeUpdate(String sql) {
-        log.info("executeUpdate: " + sql);
+        log.info("executeUpdate: \n" + sql);
         final Connection connection = createOrReuseConnection();
         try (
                 final Statement statement = connection.createStatement();
