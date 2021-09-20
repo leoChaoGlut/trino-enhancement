@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -22,14 +23,19 @@ public class TrinoShardingSync {
     private final TrinoShardingSyncProp trinoShardingSyncProp;
     private final Executor executor;
 
-    public TrinoShardingSync(TrinoShardingSyncProp trinoShardingSyncProp) {
-        this(trinoShardingSyncProp, null);
+    public TrinoShardingSync(TrinoShardingSyncProp trinoShardingSyncProp, int concurrency) {
+        this(trinoShardingSyncProp, concurrency, null);
     }
 
     public TrinoShardingSync(TrinoShardingSyncProp trinoShardingSyncProp, Executor executor) {
-        this.trinoShardingSyncProp = trinoShardingSyncProp;
-        this.executor = executor;
+        this(trinoShardingSyncProp, 1, executor);
     }
+
+    private TrinoShardingSync(TrinoShardingSyncProp trinoShardingSyncProp, int concurrency, Executor executor) {
+        this.trinoShardingSyncProp = trinoShardingSyncProp;
+        this.executor = executor == null ? Executors.newFixedThreadPool(concurrency) : executor;
+    }
+
 
     public void sync() {
         @Cleanup final TrinoSqlExecutor trinoSqlExecutor = new TrinoSqlExecutor(trinoShardingSyncProp.getTrinoProps());
@@ -72,11 +78,7 @@ public class TrinoShardingSync {
                         log.info("Insert is finished: " + count);
                     };
 
-                    if (executor == null) {
-                        return CompletableFuture.runAsync(runnable);
-                    } else {
-                        return CompletableFuture.runAsync(runnable, executor);
-                    }
+                    return CompletableFuture.runAsync(runnable, executor);
                 })
                 .collect(Collectors.toList());
 

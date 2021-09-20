@@ -6,8 +6,6 @@ import org.junit.Test;
 import personal.leo.trinoShardingSync.prop.TrinoProps;
 import personal.leo.trinoShardingSync.prop.TrinoShardingSyncProp;
 
-import java.util.concurrent.Executors;
-
 public class TrinoShardingSyncTest {
     TrinoShardingSync trinoShardingSync;
 
@@ -23,7 +21,7 @@ public class TrinoShardingSyncTest {
 
         final TrinoShardingSyncProp trinoShardingSyncProp = new TrinoShardingSyncProp(trinoProps, srcFullyQualifiedNameRegex, sinkFullyQualifiedName, whereClause, syncColumns);
 
-        trinoShardingSync = new TrinoShardingSync(trinoShardingSyncProp, Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()));
+        trinoShardingSync = new TrinoShardingSync(trinoShardingSyncProp, 1);
     }
 
     @Test
