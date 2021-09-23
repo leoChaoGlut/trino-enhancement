@@ -1,4 +1,4 @@
-package personal.leo.trinoShardingSync;
+package personal.leo.trino.enhancement;
 
 import org.junit.Test;
 

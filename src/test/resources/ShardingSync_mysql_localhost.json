@@ -1,0 +1,9 @@
+{
+  "trinoProp": {
+    "url": "jdbc:trino://localhost:10100"
+  },
+  "srcFullyQualifiedNameRegex": "^(mysql[0-9]+).(test[0-9]+).(t[0-9]+)$",
+  "sinkFullyQualifiedName": "catalog.schema.table",
+  "whereClause": "where 1=1",
+  "concurrency": 2
+}

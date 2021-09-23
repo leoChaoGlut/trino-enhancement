@@ -1,0 +1,8 @@
+{
+  "trinoProp": {
+    "url": "jdbc:trino://localhost:10100"
+  },
+  "catalog": "mysql",
+  "schema": "test",
+  "table": "t1"
+}

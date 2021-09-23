@@ -1,10 +1,10 @@
-package personal.leo.trinoShardingSync.utils;
+package personal.leo.trino.enhancement.utils;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import personal.leo.trinoShardingSync.prop.TrinoProp;
+import personal.leo.trino.enhancement.prop.TrinoProp;
 
 import java.io.Closeable;
 import java.sql.*;
